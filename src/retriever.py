@@ -34,8 +34,6 @@ class Retriever:
         self.vectorstore = vectorstore
 
         # LangChain's built-in retriever interface
-        # search_type="similarity" → cosine similarity search
-        # k = how many chunks to return per query
         self.retriever = vectorstore.as_retriever(
             search_type="similarity",
             search_kwargs={"k": settings.RETRIEVAL_TOP_K}
@@ -59,7 +57,7 @@ class Retriever:
 
         logger.info(f"Retrieving docs for: '{query}'")
 
-        # invoke() converts query to vector and searches FAISS
+        
         docs = self.retriever.invoke(query)
 
         logger.info(f"Retrieved {len(docs)} chunks")
@@ -87,7 +85,7 @@ class Retriever:
             k=settings.RETRIEVAL_TOP_K
         )
 
-        # Log each result's score for visibility
+        
         for i, (doc, score) in enumerate(results):
             logger.info(
                 f"Chunk {i+1} | Score: {score:.4f} | "
@@ -124,7 +122,7 @@ class Retriever:
                 f"{doc.page_content}"
             )
 
-        # Join all chunks with a clear separator
+       
         return "\n\n---\n\n".join(formatted)
 
 

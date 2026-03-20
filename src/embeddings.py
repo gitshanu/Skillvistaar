@@ -33,9 +33,7 @@ class EmbeddingStore:
     def __init__(self):
         logger.info(f"Loading embedding model: {settings.EMBEDDING_MODEL}")
 
-        # HuggingFaceEmbeddings runs the model locally
-        # model_kwargs device: cpu  → runs on CPU (works on any laptop)
-        # encode_kwargs normalize  → normalizes vectors for better similarity
+       
         self.embeddings = HuggingFaceEmbeddings(
             model_name=settings.EMBEDDING_MODEL,
             model_kwargs={"device": "cpu"},
@@ -67,18 +65,13 @@ class EmbeddingStore:
         logger.info(f"Embedding {len(chunks)} chunks...")
         logger.info("This may take 1-2 minutes on first run...")
 
-        # FAISS.from_documents does two things internally:
-        # 1. Calls embedding model on every chunk's text
-        # 2. Builds a searchable index from those vectors
+       
         vectorstore = FAISS.from_documents(
             documents=chunks,
             embedding=self.embeddings
         )
 
-        # Save to disk so we don't re-embed every time we run the app
-        # Creates two files in vectorstore/:
-        #   index.faiss  → the actual vectors
-        #   index.pkl    → the document metadata
+        
         vectorstore.save_local(self.vectorstore_path)
         logger.info(f"FAISS index saved to: {self.vectorstore_path}")
 
@@ -104,8 +97,7 @@ class EmbeddingStore:
 
         logger.info("Loading FAISS index from disk...")
 
-        # allow_dangerous_deserialization=True is required by newer FAISS
-        # it's safe here because WE created this file ourselves
+        
         vectorstore = FAISS.load_local(
             self.vectorstore_path,
             embeddings=self.embeddings,
@@ -115,7 +107,7 @@ class EmbeddingStore:
         logger.info("FAISS index loaded successfully")
         return vectorstore
 
-    def build_or_load(self, chunks: List[Document] = None) -> FAISS: # type: ignore
+    def build_or_load(self, chunks: List[Document] = None) -> FAISS: 
         """
         Smart method — builds if index doesn't exist, loads if it does.
 

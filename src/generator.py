@@ -34,7 +34,7 @@ class AnswerGenerator:
             temperature=0.1,
              num_predict=512
             # Low temperature for factual accuracy
-            # Slight non-zero allows natural language flow
+            
         )
 
         self.prompt = ChatPromptTemplate.from_messages([
@@ -87,30 +87,6 @@ Please answer the question based on the context above:"""
                 f"[Source {i+1}: {source}, Page {page}]\n{doc.page_content}"
             )
         return "\n\n".join(formatted)
-
-    # def _extract_sources(self, docs: List[Document]) -> List[Dict]:
-    #     """
-    #     Extracts source information from documents for citation display.
-
-    #     Returns a clean list of sources the user can see in the UI.
-    #     """
-    #     sources = []
-    #     seen = set()  # avoid duplicate sources
-
-    #     for doc in docs:
-    #         source = doc.metadata.get("source", "unknown")
-    #         page = doc.metadata.get("page", "unknown")
-
-    #         # Create unique key to avoid duplicates
-    #         key = f"{source}_p{page}"
-    #         if key not in seen:
-    #             seen.add(key)
-    #             sources.append({
-    #                 "file": source,
-    #                 "page": page,
-    #             })
-
-    #     return sources
 
     def _extract_sources(self, docs: List[Document]) -> List[Dict]:
      sources = []

@@ -20,7 +20,7 @@ generating any answer, and falls back to live web search when local docs are ins
 
 
 ## How CRAG Works (the pipeline)
-
+```
 User Question
       ↓
   RETRIEVE → top 2 chunks from FAISS
@@ -31,7 +31,7 @@ User Question
   NO  → REWRITE → RETRIEVE → GRADE
                                   ↓
                     still NO → WEB SEARCH → GENERATE → Answer
-
+```
 
 ```
 

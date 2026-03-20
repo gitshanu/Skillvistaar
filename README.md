@@ -33,7 +33,7 @@ User Question
                     still NO → WEB SEARCH → GENERATE → Answer
 
 
-
+```
 
 ## Tech Stack (100% Free & Local)
 
@@ -46,7 +46,7 @@ User Question
 | Web Search | Tavily API (free tier) |
 | Frontend | Streamlit |
 
-
+```
 ## Knowledge Base
 
 - 📄 NEP 2020 — National Education Policy
@@ -56,7 +56,7 @@ User Question
 - 🔍 Tavily live web search (real-time fallback)
 
 
-
+```
 ## Project Structure
 
 skillvistaar-crag/
@@ -73,7 +73,7 @@ skillvistaar-crag/
 ├── data/                # PDFs downloaded here (auto)
 ├── vectorstore/         # FAISS index saved here (auto)
 └── requirements.txt
-
+```
 
 
 
@@ -81,7 +81,7 @@ skillvistaar-crag/
 
 ### 1. Clone the repo
 
-git clone https://github.com/YOUR_USERNAME/skillvistaar-crag.git
+git clone https://github.com/YOUR_USERNAME/Skillvistaar.git
 cd skillvistaar-crag
 
 

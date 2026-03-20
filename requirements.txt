@@ -1,31 +1,30 @@
 # Document loading
-pymupdf                   # Read PDF files
+pymupdf                   
 
 # LangChain core
 langchain
 langchain-community
-langchain-ollama          # Connect LangChain to Ollama (local LLM)
-langchain-huggingface     # Connect LangChain to HuggingFace embeddings
+langchain-ollama         
+langchain-huggingface     
 
 # Vector store
-faiss-cpu                 # Local vector search, no server needed
+faiss-cpu                 
 
 # Embeddings model
-sentence-transformers     # Runs all-MiniLM-L6-v2 locally
+sentence-transformers    
 
 # LangGraph (CRAG workflow)
 langgraph
 
 # Web search fallback
-tavily-python             # Free tier — 1000 searches/month
+tavily-python             
 
 # Frontend
 streamlit
 
 # Utilities
-python-dotenv             # Load API keys from .env file
-pydantic                  # Data validation for our classes
-
+python-dotenv            
+pydantic                 
 
 pydantic-settings
 

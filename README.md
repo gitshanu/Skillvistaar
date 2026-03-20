@@ -33,10 +33,10 @@ User Question
                     still NO → WEB SEARCH → GENERATE → Answer
 ```
 
-```
+
 
 ## Tech Stack (100% Free & Local)
-
+```
 | Component | Tool |
 |---|---|
 | Orchestration | LangGraph |
@@ -56,9 +56,9 @@ User Question
 - 🔍 Tavily live web search (real-time fallback)
 
 
-```
-## Project Structure
 
+## Project Structure
+```
 skillvistaar-crag/
 ├── src/
 │   ├── ingestion.py     # Downloads + chunks PDFs
@@ -82,7 +82,7 @@ skillvistaar-crag/
 ### 1. Clone the repo
 
 git clone https://github.com/YOUR_USERNAME/Skillvistaar.git
-cd skillvistaar-crag
+cd Skillvistaar
 
 
 ### 2. Create virtual environment

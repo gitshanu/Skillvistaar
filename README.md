@@ -131,4 +131,5 @@ Open http://localhost:8501 in your browser.
 - *"What is the 5+3+3+4 structure in NEP 2020?"*
 - *"What is the latest news in AI hiring this week?"* ← triggers web search
 
-
+## License
+This project is licensed under the MIT License — see [LICENSE](LICENSE) for details.

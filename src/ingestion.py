@@ -1,8 +1,7 @@
 import sys
 from pathlib import Path
 
-# This adds the project root to Python's search path
-# So "from config import settings" works from anywhere
+
 sys.path.append(str(Path(__file__).parent.parent))
 
 import logging
@@ -20,18 +19,13 @@ from langchain_community.document_loaders import WikipediaLoader
 from config import settings
 
 # ─── Logging Setup ───────────────────────────────────────────────────────────
-# logging is like print() but professional
-# It shows timestamps, severity levels (INFO, WARNING, ERROR)
-# Every production Python file should have this
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 # ─── Document URLs ───────────────────────────────────────────────────────────
-# All our source PDFs in one dictionary
-# Key   = filename we save as (in data/ folder)
-# Value = public URL to download from
+
 
 DOCUMENT_URLS = {
     "nep_2020.pdf": (
@@ -65,12 +59,11 @@ class DocumentIngestion:
     def __init__(self):
         settings.DATA_DIR.mkdir(exist_ok=True)
 
-        # This is the splitter that will chunk our documents
-        # We define it once here and reuse it for all documents
+        
         self.splitter = RecursiveCharacterTextSplitter(
             chunk_size=settings.CHUNK_SIZE,      
             chunk_overlap=settings.CHUNK_OVERLAP,
-            # first try paragraph breaks, then sentences, then words
+            
             separators=["\n\n", "\n", " ", ""]
         )
 
@@ -86,7 +79,7 @@ class DocumentIngestion:
         for filename, url in DOCUMENT_URLS.items():
             save_path = settings.DATA_DIR / filename
 
-            # Skip if already downloaded
+            
             if save_path.exists():
                 logger.info(f"Already exists, skipping: {filename}")
                 continue
@@ -94,12 +87,11 @@ class DocumentIngestion:
             try:
                 logger.info(f"Downloading: {filename}")
 
-                # stream=True means we download in chunks
-                # important for large files — doesn't load entire PDF into RAM at once
+                
                 response = requests.get(url, stream=True, timeout=60)
-                response.raise_for_status()  # raises error if download failed
+                response.raise_for_status()  
 
-                # Write the file to disk in binary mode
+              
                 save_path.write_bytes(response.content)
                 logger.info(f"Saved: {filename}")
 
@@ -133,13 +125,11 @@ class DocumentIngestion:
             try:
                 logger.info(f"Loading: {pdf_path.name}")
 
-                # PyMuPDFLoader is fast and handles scanned + text PDFs well
+                
                 loader = PyMuPDFLoader(str(pdf_path))
                 documents = loader.load()
 
-                # Add source filename to each document's metadata
-                # This is important — when we return an answer we can say
-                # "this came from nep_2020.pdf page 12"
+                
                 for doc in documents:
                     doc.metadata["source"] = pdf_path.name
 
@@ -207,39 +197,6 @@ class DocumentIngestion:
 
         logger.info(f"=== Ingestion Complete: {len(chunks)} chunks ready ===")
         return chunks
-    
-
-# def load_wikipedia_sources(self) -> List[Document]:
-#     """
-#     Loads Wikipedia articles for broader context.
-#     Covers topics our PDFs might not fully address.
-#     """
-#     topics = [
-#         "National Education Policy 2020",
-#         "Skill India",
-#         "National Skill Development Corporation",
-#         "Artificial intelligence in education",
-#         "India labour law",
-#     ]
-
-#     wiki_docs = []
-#     for topic in topics:
-#         try:
-#             logger.info(f"Loading Wikipedia: {topic}")
-#             loader = WikipediaLoader(
-#                 query=topic,
-#                 load_max_docs=1,       # 1 article per topic
-#                 doc_content_chars_max=3000  # limit size
-#             )
-#             docs = loader.load()
-#             for doc in docs:
-#                 doc.metadata["source"] = f"wikipedia_{topic[:20]}.txt"
-#             wiki_docs.extend(docs)
-#         except Exception as e:
-#             logger.warning(f"Wikipedia load failed for {topic}: {e}")
-
-#     logger.info(f"Loaded {len(wiki_docs)} Wikipedia articles")
-#     return wiki_docs
 
 
     def load_wikipedia_sources(self) -> List[Document]:
@@ -261,8 +218,8 @@ class DocumentIngestion:
                 logger.info(f"Loading Wikipedia: {topic}")
                 loader = WikipediaLoader(
                     query=topic,
-                    load_max_docs=1,       # 1 article per topic
-                    doc_content_chars_max=3000  # limit size
+                    load_max_docs=1,       
+                    doc_content_chars_max=3000  
                 )
                 docs = loader.load()
                 for doc in docs:
@@ -276,14 +233,12 @@ class DocumentIngestion:
 
 
 # ─── Run directly to test ─────────────────────────────────────────────────────
-# When you run: python src/ingestion.py
-# It runs the full pipeline and prints a sample chunk
 
 if __name__ == "__main__":
     ingestion = DocumentIngestion()
     chunks = ingestion.run()
 
-    # Print first chunk to verify everything worked
+   
     if chunks:
         print("\n--- Sample Chunk ---")
         print(f"Source  : {chunks[0].metadata.get('source')}")

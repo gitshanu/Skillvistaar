@@ -17,8 +17,6 @@ logger = logging.getLogger(__name__)
 
 
 # ─── Structured Output Schema ─────────────────────────────────────────────────
-# This Pydantic model forces the LLM to return ONLY "yes" or "no"
-# Field(description=...) tells the LLM what this field means
 
 class GradeResult(BaseModel):
     """
@@ -47,22 +45,16 @@ class DocumentGrader:
     """
 
     def __init__(self):
-        # Initialize the LLM
-        # temperature=0 → we want consistent, deterministic grading
-        # not creative answers
+       
         llm = ChatOllama(
             model=settings.LLM_MODEL,
             temperature=0
         )
 
-        # .with_structured_output() forces LLM to return GradeResult shape
-        # This means we always get { score: "yes" } or { score: "no" }
-        # Never a free-form paragraph
         self.structured_llm = llm.with_structured_output(GradeResult)
 
         # The grading prompt
-        # Notice: we give very clear instructions
-        # "do not" is important — stops the LLM from overthinking
+       
         self.prompt = ChatPromptTemplate.from_messages([
     (
         "system",
@@ -120,9 +112,9 @@ Answer 'yes' or 'no' only."""
                 "document": document.page_content
             })
 
-            score = result.score.strip().lower() # type: ignore
+            score = result.score.strip().lower() 
 
-            # Safety check — make sure we only get yes/no
+            
             if score not in ["yes", "no"]:
                 logger.warning(f"Unexpected score '{score}' — defaulting to 'no'")
                 score = "no"
@@ -135,7 +127,7 @@ Answer 'yes' or 'no' only."""
 
         except Exception as e:
             logger.error(f"Grading failed: {e}")
-            # On error, default to "no" so correction is triggered
+            
             return (document, "no")
 
     def grade_documents(
@@ -169,7 +161,7 @@ Answer 'yes' or 'no' only."""
         relevant_docs = []
         not_relevant_count = 0
 
-        # Grade each chunk individually
+        
         for doc in documents:
             graded_doc, score = self.grade_single_document(question, doc)
 
@@ -185,11 +177,11 @@ Answer 'yes' or 'no' only."""
         logger.info(f"Grading complete: {relevant}/{total} chunks relevant")
 
         if relevant == 0:
-            # No relevant docs at all → trigger correction
+            
             logger.info("Decision: REWRITE — no relevant chunks found")
             return [], "rewrite"
         else:
-            # At least some relevant docs → proceed to generate
+           
             logger.info(f"Decision: GENERATE — using {relevant} relevant chunks")
             return relevant_docs, "generate"
 

@@ -33,9 +33,7 @@ class QueryRewriter:
         llm = ChatOllama(
             model=settings.LLM_MODEL,
             temperature=0.3
-            # Slightly higher temperature than grader (0.0)
-            # because we want some creativity in rephrasing
-            # but not too random
+            
         )
 
         self.prompt = ChatPromptTemplate.from_messages([
@@ -64,8 +62,7 @@ Rewrite this question to improve document retrieval:"""
             )
         ])
 
-        # StrOutputParser extracts just the text string from LLM response
-        # No structured output needed here — we just want a plain string
+        
         self.chain = self.prompt | llm | StrOutputParser()
         logger.info("QueryRewriter initialized")
 
@@ -88,7 +85,7 @@ Rewrite this question to improve document retrieval:"""
         try:
             rewritten = self.chain.invoke({"question": question})
 
-            # Clean up any extra whitespace
+            
             rewritten = rewritten.strip()
 
             logger.info(f"Rewritten query: '{rewritten}'")
@@ -96,8 +93,7 @@ Rewrite this question to improve document retrieval:"""
 
         except Exception as e:
             logger.error(f"Rewriting failed: {e}")
-            # If rewriting fails, return original question
-            # so the pipeline can still continue
+            
             logger.warning("Returning original query as fallback")
             return question
 
